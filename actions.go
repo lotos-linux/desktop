@@ -3,7 +3,7 @@ package godesktop
 import (
 	"strings"
 
-	"github.com/lotos-linux/go-desktop/go-desktop/utils"
+	"github.com/sujer-ux/go-desktop/go-desktop/utils"
 )
 
 type Action struct {
