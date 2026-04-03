@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/sujer-ux/go-desktop/go-desktop/utils"
+	"github.com/sujer-ux/go-desktop/utils"
 )
 
 type Manager struct {

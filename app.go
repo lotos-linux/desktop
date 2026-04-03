@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/sujer-ux/go-desktop/go-desktop/utils"
+	"github.com/sujer-ux/go-desktop/utils"
 )
 
 type App struct {
