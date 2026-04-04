@@ -3,7 +3,7 @@ package godesktop
 import (
 	"strings"
 
-	"github.com/sujer-ux/go-desktop/utils"
+	"github.com/lotos-linux/desktop/utils"
 )
 
 // Action represents a desktop action from a .desktop file.

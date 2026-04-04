@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/sujer-ux/go-desktop/utils"
+	"github.com/lotos-linux/desktop/utils"
 )
 
 // Manager manages desktop application discovery and retrieval.

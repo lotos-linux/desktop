@@ -1,11 +1,11 @@
-# godesktop
+# lotos-linux/desktop
 
 A Go library for parsing and interacting with Linux desktop entries (.desktop files). Provides application discovery, management, and launching capabilities from standard and custom directories.
 
 ## Installation
 
 ```bash
-go get github.com/sujer-ux/go-desktop
+go get github.com/lotos-linux/desktop
 ```
 
 ## API Reference
@@ -110,7 +110,7 @@ import (
     "fmt"
     "log"
     
-    "github.com/sujer-ux/go-desktop"
+    "github.com/lotos-linux/desktop"
 )
 
 func main() {

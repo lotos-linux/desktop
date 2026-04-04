@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/sujer-ux/go-desktop/utils"
+	"github.com/lotos-linux/desktop/utils"
 )
 
 // App represents a desktop application with its metadata and capabilities.

@@ -1,3 +1,3 @@
-module github.com/sujer-ux/go-desktop
+module github.com/lotos-linux/desktop
 
 go 1.26.1
