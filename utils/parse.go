@@ -65,3 +65,13 @@ func load(path string) ([]string, error) {
 
 	return output, nil
 }
+
+func FilterEmpty(s []string) []string {
+	var result []string
+	for _, v := range s {
+		if v != "" {
+			result = append(result, strings.TrimSpace(v))
+		}
+	}
+	return result
+}

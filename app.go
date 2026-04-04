@@ -3,6 +3,7 @@ package godesktop
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/sujer-ux/go-desktop/utils"
 )
@@ -21,6 +22,30 @@ type App struct {
 	Exec string
 	// SingleWindow indicates if the application should run as a single window instance
 	SingleWindow bool
+
+	// Categories specifies the application categories (e.g., "System;Utility;")
+	// as defined in the Desktop Entry Specification
+	Categories []string
+	// MimeTypes lists the MIME types supported by the application
+	MimeTypes []string
+	// NoDisplay indicates if the application should be hidden from menus
+	NoDisplay bool
+	// Terminal specifies if the application needs to run in a terminal window
+	Terminal bool
+	// OnlyShowIn lists desktop environments where this application should be shown
+	OnlyShowIn []string
+	// NotShowIn lists desktop environments where this application should NOT be shown
+	NotShowIn []string
+	// Keywords provides search terms for finding the application (localized)
+	Keywords []string
+	// StartupWMClass is the window manager class used for startup notification
+	StartupWMClass string
+	// StartupNotify indicates if the desktop should show startup notification
+	StartupNotify bool
+	// Path specifies the working directory for the application
+	Path string
+	// DBusActivatable indicates if the application can be activated via D-Bus
+	DBusActivatable bool
 
 	// actions contains the application's desktop actions (e.g., "New Window", "Compose")
 	actions []Action
@@ -56,6 +81,16 @@ func (m *Manager) NewAppInFile(file string) (*App, error) {
 //   - data: A map representing the parsed .desktop file structure, with group names as keys
 //     and key-value maps as values.
 //
+// The method parses the following standard .desktop entry fields:
+//   - Basic fields: Name, Comment, Icon, Exec, Path
+//   - Categories: Split by semicolon into a slice
+//   - MimeTypes: Split by semicolon into a slice
+//   - Desktop environments: OnlyShowIn, NotShowIn
+//   - Keywords: Localized and split by semicolon
+//   - Boolean flags: NoDisplay, Terminal, SingleMainWindow, StartupNotify, DBusActivatable
+//   - Window management: StartupWMClass
+//   - Desktop actions: Parsed via getActions()
+//
 // Returns:
 //   - *App: The constructed application instance.
 //   - error: Error if the required "Desktop Entry" section is missing.
@@ -69,28 +104,52 @@ func (m *Manager) NewApp(data map[string]map[string]string) (*App, error) {
 		return nil, errors.New("\"Desktop\" Entry section not found")
 	}
 
-	name, ok := utils.GetAllLocales(general, "Name")
-	if ok {
+	if name, ok := utils.GetAllLocales(general, "Name"); ok {
 		res.Name = utils.GetLocalizedValue(name, m.locale)
 	}
 
-	comment, ok := utils.GetAllLocales(general, "Comment")
-	if ok {
+	if comment, ok := utils.GetAllLocales(general, "Comment"); ok {
 		res.Comment = utils.GetLocalizedValue(comment, m.locale)
 	}
 
-	icon, exist := general["Icon"]
-	if exist {
-		res.Icon = icon
+	res.Icon = general["Icon"]
+	res.Exec = general["Exec"]
+	res.Path = general["Path"]
+
+	res.StartupWMClass = general["StartupWMClass"]
+
+	if categories, ok := general["Categories"]; ok {
+		res.Categories = strings.Split(categories, ";")
+		res.Categories = utils.FilterEmpty(res.Categories)
 	}
 
-	exec, exist := general["Exec"]
-	if exist {
-		res.Exec = exec
+	if mimeTypes, ok := general["MimeType"]; ok {
+		res.MimeTypes = strings.Split(mimeTypes, ";")
+		res.MimeTypes = utils.FilterEmpty(res.MimeTypes)
 	}
 
-	singleWindowStr, exist := general["SingleMainWindow"]
-	res.SingleWindow = exist && singleWindowStr == "true"
+	if onlyShowIn, ok := general["OnlyShowIn"]; ok {
+		res.OnlyShowIn = strings.Split(onlyShowIn, ";")
+		res.OnlyShowIn = utils.FilterEmpty(res.OnlyShowIn)
+	}
+
+	if notShowIn, ok := general["NotShowIn"]; ok {
+		res.NotShowIn = strings.Split(notShowIn, ";")
+		res.NotShowIn = utils.FilterEmpty(res.NotShowIn)
+	}
+
+	keywords, ok := utils.GetAllLocales(general, "Keywords")
+	if ok {
+		keywordsStr := utils.GetLocalizedValue(keywords, m.locale)
+		res.Keywords = strings.Split(keywordsStr, ";")
+		res.Keywords = utils.FilterEmpty(res.Keywords)
+	}
+
+	res.NoDisplay = general["NoDisplay"] == "true"
+	res.Terminal = general["Terminal"] == "true"
+	res.SingleWindow = general["SingleMainWindow"] == "true"
+	res.StartupNotify = general["StartupNotify"] == "true"
+	res.DBusActivatable = general["DBusActivatable"] == "true"
 
 	res.actions = getActions(res.raw, m.locale)
 
