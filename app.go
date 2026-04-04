@@ -14,6 +14,8 @@ import (
 type App struct {
 	// Name is the localized application name
 	Name string
+	// GenericName is the localized application GenericName
+	GenericName string
 	// Comment is a short description of the application (localized)
 	Comment string
 	// Icon is the icon name or path for the application
@@ -106,6 +108,10 @@ func (m *Manager) NewApp(data map[string]map[string]string) (*App, error) {
 
 	if name, ok := utils.GetAllLocales(general, "Name"); ok {
 		res.Name = utils.GetLocalizedValue(name, m.locale)
+	}
+
+	if genericName, ok := utils.GetAllLocales(general, "GenericName"); ok {
+		res.GenericName = utils.GetLocalizedValue(genericName, m.locale)
 	}
 
 	if comment, ok := utils.GetAllLocales(general, "Comment"); ok {

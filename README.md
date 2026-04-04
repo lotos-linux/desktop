@@ -33,7 +33,7 @@ Returns all discovered applications from both default and custom directories. Du
 
 #### `FindByClass(className string) (*App, error)`
 
-Finds an application by its class name (base name of the .desktop file).
+Finds an application by its class name (WM_CLASS, StartupWMClass).
 
 **Parameters:**
 - `className`: Application class name (e.g., "firefox", "org.gnome.Nautilus")
@@ -44,6 +44,10 @@ Finds an application by its class name (base name of the .desktop file).
 
 Creates an App instance by parsing a .desktop file from the given path.
 
+#### `NewApp(data map[string]map[string]string) (*App, error)`
+
+Creates an App instance by data.
+
 ### App
 
 Represents a desktop application with its metadata and capabilities.
@@ -53,6 +57,7 @@ Represents a desktop application with its metadata and capabilities.
 | Field | Type | Description |
 |-------|------|-------------|
 | `Name` | `string` | Localized application name |
+| `GenericName` | `string` | Localized generic application type name |
 | `Comment` | `string` | Short description (localized) |
 | `Icon` | `string` | Icon name or path |
 | `Exec` | `string` | Command line to launch application |
@@ -130,6 +135,7 @@ func main() {
         log.Printf("Firefox not found: %v", err)
     } else {
         fmt.Printf("Application: %s\n", firefox.Name)
+        fmt.Printf("GenericName: %s\n", firefox.GenericName)
         fmt.Printf("Description: %s\n", firefox.Comment)
         fmt.Printf("Command: %s\n", firefox.Exec)
         fmt.Printf("Categories: %v\n", firefox.Categories)
