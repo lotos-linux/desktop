@@ -120,7 +120,7 @@ import (
 
 func main() {
     // Initialize manager with Russian locale
-    manager := godesktop.New("ru_RU")
+    manager := desktop.New("ru_RU")
     
     // Add custom application directory
     manager.AddCustomAppDirs("/opt/custom-apps")
